@@ -1,0 +1,73 @@
+- hosts: NameNode
+  vars:
+  - node_dir: "/node_data"
+  tasks:
+  - debug:
+          msg: "{{ ansible_facts.os_family }} {{ node_dir  }}  {{ groups['NameNode'][0]  }}"
+
+  - name: "Installing Java"
+    command: "rpm -i /home/ec2-user/jdk-8u171-linux-x64.rpm"
+    ignore_errors: yes
+    when: ansible_facts['os_family'] == "RedHat"
+
+  - name: "Installing Hadoop"
+    command: "rpm -i /home/ec2-user/hadoop-1.2.1-1.x86_64.rpm --force"
+    ignore_errors: yes
+    when: ansible_facts['os_family'] == "RedHat"
+
+  - name: "Creating directory for datanode"
+    command: "mkdir {{ node_dir }}"
+    ignore_errors: yes
+
+  - name: "Updating hdfs-site.xml using template"
+    template:
+      src: "./hdfs-site.xml.j2"
+      dest: "/etc/hadoop/hdfs-site.xml"
+
+  - name: "Updating core-site.xml using template"
+    template:
+      src: "./core-site.xml.j2"
+      dest: "/etc/hadoop/core-site.xml"
+
+  - name: "formating namenode"
+    command: "hadoop namenode -format -force"
+    when: ansible_facts['os_family'] == "RedHat"
+
+  - name: "starting hadoop cluster"
+    command: "hadoop-daemon.sh start namenode"
+    when: ansible_facts['os_family'] == "RedHat"
+
+
+  
+- hosts: DataNode
+  vars:
+  - node_dir: "/node_data"
+  tasks:
+  - name: "Installing Java"
+    command: "rpm -i /home/ec2-user/jdk-8u171-linux-x64.rpm"
+    ignore_errors: yes
+    when: ansible_facts['os_family'] == "RedHat"
+
+  - name: "Installing Hadoop"
+    command: "rpm -i /home/ec2-user/hadoop-1.2.1-1.x86_64.rpm --force"
+    ignore_errors: yes
+    when: ansible_facts['os_family'] == "RedHat"
+
+  - name: "Creating directory for datanode"
+    command: "mkdir {{ node_dir }}"
+    ignore_errors: yes
+
+  - name: "Updating hdfs-site.xml using template"
+    template:
+      src: "./hdfs-site.xml.j2"
+      dest: "/etc/hadoop/hdfs-site.xml"
+
+  - name: "Updating core-site.xml using template"
+    template:
+      src: "./core-site-datanode.xml.j2"
+      dest: "/etc/hadoop/core-site.xml"
+
+  - name: "starting hadoop datanode"
+    command: "hadoop-daemon.sh start datanode"
+    when: ansible_facts['os_family'] == "RedHat"
+

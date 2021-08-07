@@ -1,0 +1,22 @@
+- hosts: tag_Work_Master
+  tasks:
+    - name: Adding repository for jenkins
+      yum_repository:
+         name: Jenkins
+         description: Jenkins repo for downloading jenkins
+         baseurl: http://pkg.jenkins.io/redhat-stable
+         gpgcheck: no
+    - name: Installing java for jenkins
+      package:
+         name: java
+         state: present
+    - name: Installing Jenkins
+      package:
+         name: jenkins
+         state: present
+    - name: Start service Jenkins, if not started
+      service:
+         name: jenkins
+         state: started
+         enabled: true
+

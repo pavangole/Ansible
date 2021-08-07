@@ -1,0 +1,50 @@
+- hosts: tag_work_docker
+  tasks:
+    - package:
+            name: "python3"
+            state: present
+
+    - name: Create yum repository for docker
+      yum_repository:
+            name: docker
+            description: Docker yum repo
+            baseurl: https://download.docker.com/linux/centos/7/x86_64/stable/
+            gpgcheck: no
+    - lineinfile:
+            path: "/etc/yum.conf"
+            regexp: "best="
+            line: "best=False"
+
+    - package:
+          name: "docker-ce"
+          state: present
+    - lineinfile:
+            path: "/etc/yum.conf"
+            regexp: "best="
+            line: "best=True"
+
+    - service:
+          name: "docker"
+          state: started
+          enabled: yes
+- hosts: tag_work_jenkins
+  tasks:
+    - name: Adding repository for jenkins
+      yum_repository:
+         name: Jenkins
+         description: Jenkins repo for downloading jenkins
+         baseurl: http://pkg.jenkins.io/redhat-stable
+         gpgcheck: no
+    - name: Installing java for jenkins
+      package:
+         name: java
+         state: present
+    - name: Installing Jenkins
+      package:
+         name: jenkins
+         state: present
+    - name: Start service Jenkins, if not started
+      service:
+         name: jenkins
+         state: started
+         enabled: true
