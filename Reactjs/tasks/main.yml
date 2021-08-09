@@ -1,0 +1,24 @@
+---
+# tasks file for Reactjs
+
+# - name: Install Reactjs
+#   apt:
+#     name: curl
+#     state: present
+
+- name: Check npm
+  command: "npm -v"
+  register: x
+
+- name: Install create-react-app
+  command: "npm install create-react-app -g"
+  become: yes
+  when: x.rc == 0
+
+
+
+
+# - name: Install Reactjs
+#   apt:
+#     name: nodejs
+#     state: present

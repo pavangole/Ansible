@@ -1,0 +1,48 @@
+---
+# tasks file for npm
+#14.17.0
+- name: Install curl
+  shell: "apt install curl"
+  become: true
+
+- name: Configure nodesource setup
+  command: '{{ item }}'
+  become: yes
+  with_items:
+    - "curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh"
+    - "bash nodesource_setup.sh"
+
+- name: Install nodejs
+  become: yes
+  apt:
+    name: nodejs
+    state: present
+
+
+
+- name: Update nodejs
+  become: yes
+  apt:
+    name: nodejs
+    state: absent
+
+- name: Updating nodejs
+  command: '{{ item }}'
+  become: yes
+  with_items:
+    - "curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh"
+    - "bash nodesource_setup.sh"
+  
+
+- name: Install nodejs
+  become: yes
+  apt:
+    name: nodejs
+    state: present
+
+
+
+# - name: Update npm
+#   command: "npm install -g npm@^6.14.13"
+#   become: yes
+

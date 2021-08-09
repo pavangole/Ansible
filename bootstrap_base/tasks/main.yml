@@ -1,0 +1,5 @@
+---
+# tasks file for bootstrap_base
+- name: Install bootstrap
+  command: "npm install bootstrap@3"
+  become: yes

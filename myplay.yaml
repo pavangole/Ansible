@@ -1,0 +1,22 @@
+- hosts: ubuntu 
+  tasks:
+
+  - name: npm
+    include_role:
+      name: nodejs
+
+  - name: Reactjs Role
+    include_role:
+      name: Reactjs
+   
+  # - name: node_oracledb
+  #   include_role:
+  #     name: node_oracledb
+
+  # - name: graphql
+  #   include_role:
+  #     name: graphql
+
+  # - name: express_graphql
+  #   include_role:
+  #     name: express-graphql

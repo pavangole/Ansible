@@ -1,0 +1,12 @@
+---
+# tasks file for node_oracledb
+#install node-oracledb 3.1.2 and upgrade to 5.1.0
+
+- name: Check npm
+  command: "npm -v"
+  register: x
+
+- name: Install node-oracledb
+  command: "npm install oracledb"
+  become: yes
+  when: x.rc == 0

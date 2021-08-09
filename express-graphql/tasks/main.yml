@@ -1,0 +1,24 @@
+---
+# tasks file for express-graphql
+
+- name: Check npm
+  command: "npm -v"
+  register: x
+
+# - name: pring msg
+#   debug:
+#     msg: "{{ x }}"
+
+- name: Install express-graphql
+  command: "npm i express-graphql@0.6.12"
+  become: yes
+  when: x.rc == 0
+
+- name: Update graphql
+  command: '{{ item }}'
+  become: yes
+  with_items:
+    - "npm uninstall express-graphql@^0.6.12"
+    - "npm i express-graphql@^0.12.0"
+
+  when: x.rc == 0

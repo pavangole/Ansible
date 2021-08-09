@@ -1,0 +1,20 @@
+---
+# tasks file for graphql
+- name: Check npm
+  command: "npm -v"
+  register: x
+
+- name: Install graphql
+  command: "npm i graphql@^0.11.7"
+  become: yes
+  when: x.rc == 0
+
+- name: Update graphql
+  command: '{{ item }}'
+  become: yes
+  with_items:
+    - "npm uninstall graphql"
+    - "npm i graphql@^15.5.0"
+
+  when: x.rc == 0
+
